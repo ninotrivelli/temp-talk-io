@@ -1,0 +1,64 @@
+.main-header {
+  color: white;
+  /* position: sticky; */
+  top: 0px;
+  z-index: 10;
+}
+
+nav {
+  display: flex;
+  width: 90%;
+  margin: auto;
+  align-items: center;
+  padding: 2rem;
+  flex-wrap: wrap;
+}
+
+.logo {
+  flex: 3 1 40rem;
+  font-size: 3.5rem;
+  font-weight: 600;
+}
+
+nav ul {
+  list-style-type: none;
+  display: flex;
+  flex: 1 1 40rem;
+  justify-content: space-around;
+  align-items: center;
+}
+
+nav a {
+  color: white;
+  font-family: "Poppins", sans-serif;
+  text-decoration: none;
+}
+
+.nav-cta {
+  --glow-color: rgb(217, 176, 255);
+  --glow-spread-color: rgba(191, 123, 255, 0.781);
+  --enhanced-glow-color: rgb(231, 206, 255);
+
+  padding: 0.3em 1.5em;
+  color: var(--glow-color);
+  font-weight: bold;
+  background-color: var(--btn-color);
+  outline: none;
+  position: relative;
+  transition: all 0.3s;
+  cursor: pointer;
+}
+
+.nav-cta:hover {
+  text-shadow: 0 0 0.6em var(--glow-color);
+}
+
+@media screen and (max-width: 945px) {
+  nav {
+    text-align: center;
+  }
+
+  nav h1 {
+    padding-bottom: 2rem;
+  }
+}

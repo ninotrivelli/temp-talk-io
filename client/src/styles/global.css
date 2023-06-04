@@ -1,0 +1,48 @@
+@import url("https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,400;0,600;1,700&family=Roboto+Mono:wght@400;600;700&display=swap");
+
+html {
+  font-size: 62.5%;
+  scroll-behavior: smooth;
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-size: 1.6rem;
+  font-family: "Asher";
+  background-color: #212121;
+}
+
+/* .btn {
+  padding: 2rem 6rem;
+  background-color: #4c6e97;
+  border: none;
+  color: white;
+  font-size: 1.8rem;
+  cursor: pointer;
+  transition: all 0.4s ease-in-out;
+}
+
+.btn:hover {
+  background-color: white;
+  color: #4c6e97;
+  font-size: 1.9rem;
+} */
+
+h1,
+h2,
+h3,
+h4 {
+  font-family: "Poppins", sans-serif;
+  font-weight: 600;
+  color: #e8e8e8;
+}
+
+p {
+  font-family: "Poppins", sans-serif;
+  color: #e8e8e8;
+}
