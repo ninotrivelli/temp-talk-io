@@ -1,14 +1,16 @@
 import React, { useCallback, useRef, useState } from "react";
 import "./ChatHeader.css";
 import { FaRegCopy } from "react-icons/fa";
-const ChatHeader = ({ url }) => {
-  const inputRef = useRef(null);
-  const [copied, setCopied] = useState(false);
 
+import { toast } from "react-toastify";
+
+const ChatHeader = ({ url }) => {
   const copyToClipboard = useCallback(() => {
     navigator.clipboard.writeText(url).then(() => {
-      setCopied(true);
-      setTimeout(() => setCopied(false), 2000);
+      toast.success("Copied link to clipboard!", {
+        autoClose: 500,
+        hideProgressBar: true,
+      });
     });
   }, [url]);
 
@@ -19,7 +21,6 @@ const ChatHeader = ({ url }) => {
       <button className="copy__button" onClick={copyToClipboard}>
         <FaRegCopy className="copy__icon" />
       </button>
-      {copied && <p>Copied!</p>}
     </div>
   );
 };

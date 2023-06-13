@@ -1,6 +1,6 @@
 import React from "react";
 import Lottie from "lottie-react";
-import phoneChatAnimation from "../../../public/phone-chat-animation.json";
+import phoneChatAnimation from "../../assets/phone-chat-animation.json";
 import "./Hero.css";
 
 const Hero = () => {

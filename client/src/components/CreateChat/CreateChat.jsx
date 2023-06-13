@@ -7,15 +7,14 @@ const CreateChat = () => {
   const [timer, setTimer] = useState(5);
   const navigate = useNavigate();
 
-  //!TODO: Agregar Captcha de Google antes de redirigir
   const handleSubmit = (e) => {
     e.preventDefault();
 
-    if (timer < 0) return;
-    const chatId = uuidv4(); // Generamos un id único
+    if (timer <= 0) return;
+    const chatId = uuidv4();
     navigate(`/chat/${chatId}`, {
       state: { timer: timer * 60000, isHost: true },
-    }); // Redirigimos al usuario al chatroom
+    });
   };
 
   return (

@@ -1,0 +1,53 @@
+.chatInput__container {
+  flex-shrink: 0;
+  margin-top: 5px;
+}
+
+.chatInput {
+  height: 40px;
+  padding: 10px;
+  text-align: left;
+  border: 2px solid #888;
+  border-radius: 5px;
+  width: 90%;
+  font-family: "Poppins", serif;
+  color: whitesmoke;
+  outline: none;
+  background-color: #212121;
+}
+
+.chatInput:focus {
+  box-shadow: 0 0 5px rgb(182, 142, 220);
+  transition: all 0.15s ease-in-out;
+}
+
+.send__button {
+  height: 40px;
+  padding: 10px;
+  border-radius: 10px;
+  cursor: pointer;
+  background-color: transparent;
+  border: 2px solid rgb(182, 142, 220);
+  margin-left: 1rem;
+}
+
+.send__button:hover {
+  box-shadow: 0 0 8px rgb(182, 142, 220);
+  transition: all 0.15s ease-in-out;
+}
+
+.send__icon {
+  height: auto;
+  color: rgb(182, 142, 220);
+}
+
+.chatInput__container {
+  flex-shrink: 0;
+  flex-grow: 0;
+}
+
+@media (max-width: 1100px) {
+  .chatInput {
+    width: 86%;
+  }
+}

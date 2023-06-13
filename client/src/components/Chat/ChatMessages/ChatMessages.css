@@ -1,0 +1,90 @@
+.chat__container {
+  max-width: 600px;
+  margin: 0 auto;
+  padding: 20px;
+}
+
+.message {
+  max-width: 70%;
+  margin-bottom: 3rem;
+  padding: 0;
+  word-break: break-word;
+}
+
+.host__message {
+  margin-right: 0;
+  margin-left: 30%; /* 100 - max-width of .message */
+  color: #00ffff;
+  text-align: right;
+  text-shadow: 0 0 5px #00ffff, 0 0 10px #00ffff, 0 0 15px #00ffff;
+}
+
+.guest__message {
+  margin-left: 0;
+  margin-right: 30%; /* 100 - max-width of .message */
+  text-align: left;
+  color: #ff69b4;
+  text-shadow: 0 0 5px #ff69b4, 0 0 10px #ff69b4, 0 0 15px #ff69b4;
+}
+
+.message__dateTime {
+  display: block;
+  margin-top: 0.2rem;
+}
+
+.chat__body {
+  flex-grow: 1;
+  overflow-y: auto;
+}
+
+.chat__body::-webkit-scrollbar {
+  width: 5px;
+}
+
+.chat__body::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.chat__body::-webkit-scrollbar-thumb {
+  background-color: transparent;
+  transition: background-color 0.6s ease-in-out;
+}
+
+.chat__body:hover::-webkit-scrollbar-thumb {
+  background-color: rgba(255, 255, 255, 0.5);
+}
+
+/* For Mozilla browser */
+
+.chat__body {
+  scrollbar-width: thin;
+  scrollbar-color: rgba(255, 255, 255, 0.5) transparent;
+}
+
+.chat__body::-moz-scrollbar {
+  width: 5px;
+  cursor: pointer;
+}
+
+.chat__body::-moz-scrollbar-thumb {
+  background-color: rgba(255, 255, 255, 0.5);
+  border-radius: 20px;
+  border: transparent;
+  cursor: pointer;
+}
+
+@media (max-width: 600px) {
+  .chat__container {
+    padding: 5px;
+  }
+
+  .message {
+    max-width: 100%;
+  }
+
+  .host__message,
+  .guest__message {
+    margin-right: 0;
+    margin-left: 0;
+  }
+}

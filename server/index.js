@@ -3,6 +3,14 @@ const app = express();
 const http = require("http");
 const cors = require("cors");
 const { Server } = require("socket.io");
+const createDOMPurify = require("dompurify");
+const { JSDOM } = require("jsdom");
+const {
+  createChatRoom,
+  joinChatRoom,
+  sendChatMessage,
+} = require("./chatRoomActions.js");
+
 app.use(cors());
 
 const server = http.createServer(app);
@@ -14,70 +22,82 @@ const io = new Server(server, {
   },
 });
 
-// BD
-let chatRooms = {};
+const window = new JSDOM("").window;
+const DOMPurify = createDOMPurify(window);
+
+let chatRooms = new Map();
+let usedChatIds = new Set();
+let maxCharLimit = 3000;
+
+function sanitizeAndTrimMessage(message, maxLength) {
+  let sanitizedMessage = DOMPurify.sanitize(message);
+  return sanitizedMessage.substring(0, maxLength).trim();
+}
 
 io.on("connection", (socket) => {
-  console.log(`User ${socket.id} connected`);
+  console.log(`User ${socket.id} connected!`);
 
-  // Join room event
   socket.on("join-room", ({ chatId, isHost, timeout }) => {
-    console.log(chatId, isHost);
-
-    if (!isHost && !chatRooms[chatId]) {
-      socket.emit("redirectNotFound");
+    if (timeout / 60000 > 120) {
+      socket.emit("redirect-not-found");
+      socket.disconnect();
+      return;
+    }
+    if (!isHost && !usedChatIds.has(chatId)) {
+      socket.emit("redirect-not-found");
       socket.disconnect();
       return;
     }
 
-    if (!chatRooms[chatId]) {
-      chatRooms[chatId] = { users: [], messages: [], sockets: [] };
-
-      // Set timer to self-destruct room and disconnect users
-      chatRooms[chatId].timeout = setTimeout(() => {
-        chatRooms[chatId].sockets.forEach((socket) => {
-          socket.emit("redirectNotFound");
-          socket.disconnect();
-        });
-        delete chatRooms[chatId];
-        console.log(`Room ${chatId} self-destructed`);
-      }, timeout);
+    if (!usedChatIds.has(chatId)) {
+      createChatRoom(chatRooms, usedChatIds, chatId, socket, timeout);
     }
 
-    if (chatRooms[chatId].users.length < 2) {
-      socket.join(chatId);
-      chatRooms[chatId].users.push(socket.id);
-      chatRooms[chatId].sockets.push(socket);
-      console.log(`User ${socket.id} joined room ${chatId}`);
-    } else {
-      console.log(`Room ${chatId} is full`);
-    }
+    joinChatRoom(chatRooms, usedChatIds, chatId, socket, isHost);
 
-    console.log(chatRooms);
+    if (chatRooms.get(chatId)) {
+      let userCount = chatRooms.get(chatId).users.length;
+      io.to(chatId).emit("users-changed", { users: userCount });
+    }
   });
 
-  // Chat message event
   socket.on("chat-message", (chatId, message) => {
-    if (chatRooms[chatId] && chatRooms[chatId].users.includes(socket.id)) {
-      chatRooms[chatId].messages.push(message);
-      io.to(chatId).emit("chat-message", message);
-      console.log(`Message sent in room ${chatId}`);
-    } else {
-      console.log(`Cannot send message in room ${chatId}`);
-    }
+    const sanitizedAndTrimmedMessage = sanitizeAndTrimMessage(
+      message.msgContent,
+      maxCharLimit
+    );
+
+    message.msgContent = sanitizedAndTrimmedMessage;
+    sendChatMessage(chatRooms, io, chatId, socket, message);
   });
 
-  // Disconnect event
   socket.on("disconnect", () => {
-    for (let chatId in chatRooms) {
-      let room = chatRooms[chatId];
-      let index = room.users.indexOf(socket.id);
+    let chatRoomsToDelete = [];
+
+    for (let [chatId, chatRoom] of chatRooms.entries()) {
+      let index = chatRoom.users.indexOf(socket.id);
       if (index !== -1) {
-        room.users.splice(index, 1);
+        chatRoom.users.splice(index, 1);
         socket.leave(chatId);
         console.log(`User ${socket.id} left room ${chatId}`);
+        io.to(chatId).emit("user-disconnected");
+
+        if (chatRoom.users.length === 0) {
+          clearTimeout(chatRoom.timeoutId);
+          chatRoomsToDelete.push(chatId);
+          console.log(`Room ${chatId} was deleted because both users left!`);
+        }
+
+        let userCount = chatRoom?.users.length;
+        io.to(chatId).emit("users-changed", { users: userCount });
       }
     }
+
+    for (let chatId of chatRoomsToDelete) {
+      chatRooms.delete(chatId);
+      console.log("chatRooms MAP Size: ", chatRooms.size);
+    }
+
     console.log(`User ${socket.id} disconnected`);
   });
 });

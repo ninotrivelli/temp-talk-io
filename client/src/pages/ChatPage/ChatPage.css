@@ -1,3 +1,6 @@
-.h-100 {
-  height: 100vh;
+.chatPage__container {
+  margin-top: 2.5vh;
+  display: flex;
+  flex-direction: column;
+  height: 95vh;
 }
