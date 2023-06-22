@@ -28,7 +28,7 @@ const Features = () => {
       icon: <MdTouchApp />,
       title: "Controlled",
       description:
-        "Your conversation, your rules. Opt to self-destruct the chat you created anytime you desire, ending the dialogue at your own pace.",
+        "Your conversation, your rules. Opt to leave the chat anytime, no one can enter the link once the tab is closed.",
     },
   ];
 
